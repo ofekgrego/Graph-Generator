@@ -10,7 +10,11 @@ height = 800
 labelArray = []
 entryArray = []
 addButtonArray = []
+showHideButtonArray = []
+showHideFuncArray = []
 infoArray = []
+colorArray = ["#32a852","#2c8c96","#472c9e",
+            "#e3fa39","#fa9639","#fa3939","#ad0096"]
 
 window = Tk()
 window.title("Graph Generator")
@@ -28,13 +32,16 @@ def makingGraph():
     canvasFrame.create_line(padding,padding,padding,height-padding, width=3)
     if numOfLines>0:
         for i in range(len(infoArray)):
-            maxHeight = height-(padding*2)
-            spaceBetweenPoints = (width-(padding*2))/len(infoArray[i])
-            maxPlace = max(infoArray[i])
-            eachPlaceHeight = (height-padding*2)/maxPlace
+            if showHideFuncArray[i] == False:
+                maxHeight = height-(padding*2)
+                spaceBetweenPoints = (width-(padding*2))/len(infoArray[i])
+                maxPlace = max(infoArray[i])
+                eachPlaceHeight = (height-padding*2)/max(maxPlace,1)
 
-            for j in range(len(infoArray[0])-1):
-                canvasFrame.create_line((j)*spaceBetweenPoints+padding,maxHeight-infoArray[i][j]*eachPlaceHeight+padding,(j+1)*spaceBetweenPoints+padding,maxHeight-infoArray[i][j+1]*eachPlaceHeight+padding)
+                for j in range(len(infoArray[i])-1):
+                    canvasFrame.create_line((j)*spaceBetweenPoints+padding,maxHeight-infoArray[i][j]*eachPlaceHeight+padding,
+                    (j+1)*spaceBetweenPoints+padding,maxHeight-infoArray[i][j+1]*eachPlaceHeight+padding,
+                    width=3,fill=colorArray[i])
 
 def configure(event):
     global width, height
@@ -42,13 +49,18 @@ def configure(event):
     height = event.height
     makingGraph()
 
+def showHideGraphPressed(graphNum):
+    if showHideFuncArray[graphNum] == False:
+        showHideFuncArray[graphNum] = True
+    else:
+        showHideFuncArray[graphNum] = False
+    makingGraph()
 
 def addButtonPressed(graphNum):
     if entryArray[graphNum].get() == "":
         infoArray[graphNum].append(infoArray[graphNum][graphNum-1])
     else:
         infoArray[graphNum].append(int(entryArray[graphNum].get()))
-    print(infoArray)
     makingGraph()
 
 
@@ -58,11 +70,14 @@ def addGraphPressed():
         labelArray.append(Label(dataFrame,text="Graph N." + str(numOfLines+1)))
         entryArray.append(Entry(dataFrame,width=5))
         addButtonArray.append(Button(dataFrame, text="Add Value",command=lambda numOfLines=numOfLines: addButtonPressed(numOfLines)))
+        showHideButtonArray.append(Button(dataFrame,text="Show/Hide Graph", command=lambda numOfLines=numOfLines: showHideGraphPressed(numOfLines)))
 
         labelArray[numOfLines].pack()
         entryArray[numOfLines].pack()
         addButtonArray[numOfLines].pack()
-        infoArray.append([0,5,3])
+        showHideButtonArray[numOfLines].pack()
+        infoArray.append([0])
+        showHideFuncArray.append(False)
 
         Label(dataFrame,text="",height=2).pack()
         numOfLines += 1
