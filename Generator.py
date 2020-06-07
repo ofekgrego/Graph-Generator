@@ -90,6 +90,7 @@ def addGraphPressed():
         deleteButtonArray[numOfLines].pack()
         showHideButtonArray[numOfLines].pack()
         infoArray.append([])
+        print("hi")
         showHideFuncArray.append(False)
 
         Label(dataFrame,text="",height=2).pack()
