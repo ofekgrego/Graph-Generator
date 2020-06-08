@@ -24,10 +24,6 @@ canvasFrame.pack(side=tkinter.LEFT,fill=BOTH,expand=TRUE)
 dataFrame = Frame(window,width=300,height=800)
 dataFrame.pack(side=tkinter.RIGHT,fill=Y)
 
-canvasFrame.create_line(padding,height-padding,width-padding,height-padding, width=3)
-canvasFrame.create_line(padding,padding,padding,height-padding, width=3)
-
-
 def makingGraph():
     canvasFrame.delete("all")
     canvasFrame.create_line(padding,height-padding,width-padding,height-padding, width=3)
@@ -36,14 +32,20 @@ def makingGraph():
         for i in range(len(infoArray)):
             if showHideFuncArray[i] == False:
                 maxHeight = height-(padding*2)
-                spaceBetweenPoints = float(width-(padding*2))/len(infoArray[i])
-                maxPlace = max(infoArray[i])
+                spaceBetweenPoints = float(width-(padding*2))/max(len(infoArray[i]),1)
+                if len(infoArray[i]) != 0:
+                    maxPlace = max(infoArray[i])
+                else:
+                    maxPlace = 1
                 eachPlaceHeight = float(height-padding*2)/max(maxPlace,1)
 
                 for j in range(len(infoArray[i])-1):
                     canvasFrame.create_line((j)*spaceBetweenPoints+padding,maxHeight-infoArray[i][j]*eachPlaceHeight+padding,
                     (j+1)*spaceBetweenPoints+padding,maxHeight-infoArray[i][j+1]*eachPlaceHeight+padding,
                     width=3,fill=colorArray[i])
+    else:
+        canvasFrame.create_text(470, 150, text="Add 2 or more values to start \nview the graphs.", font="helvetica 60")
+        canvasFrame.create_text(390, 350, text="Press + in the right left \nto create a new graph.", font="helvetica 60")
 
 def configure(event):
     global width, height
@@ -90,7 +92,6 @@ def addGraphPressed():
         deleteButtonArray[numOfLines].pack()
         showHideButtonArray[numOfLines].pack()
         infoArray.append([])
-        print("hi")
         showHideFuncArray.append(False)
 
         Label(dataFrame,text="",height=2).pack()
